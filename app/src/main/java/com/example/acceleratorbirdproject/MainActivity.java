@@ -3,8 +3,10 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
+import android.graphics.Rect;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -22,8 +24,18 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     GameSurface gameSurface;
     Bitmap bird;
+    Bitmap topPipe;
+    Bitmap bottomPipe;
     int birdLeft = 50;
     int birdTop = 700;
+    int pipeLeft=-100;
+    int bPTop=2000;
+    int birdWidth;
+    int birdHeight;
+    int tPWidth;
+    int tPHeight;
+    int bPWidth;
+    int bPHeight;
     boolean goingUp =false;
     boolean goingDown = false;
     int z = 0;
@@ -90,7 +102,12 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
         Bitmap background;
         Bitmap backgroundScaled;
+        Bitmap topPipeScaled;
+        Bitmap bottomPipeScaled;
         Paint paintProperty;
+        Rect cBird;
+        Rect cTP;
+        Rect cBP;
 
         int screenWidth;
         int screenHeight;
@@ -99,8 +116,18 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             super(context);
             holder=getHolder();
             background=BitmapFactory.decodeResource(getResources(),R.drawable.background);
-            backgroundScaled = Bitmap.createScaledBitmap(background,1080,2100,false);
+            topPipe = BitmapFactory.decodeResource(getResources(),R.drawable.toppipe);
+            bottomPipe = BitmapFactory.decodeResource(getResources(),R.drawable.bottompipe);
+            backgroundScaled = Bitmap.createScaledBitmap(background,1080,2150,false);
+            topPipeScaled = Bitmap.createScaledBitmap(topPipe,200,1200,false);
+            bottomPipeScaled = Bitmap.createScaledBitmap(bottomPipe,200,1200,false);
             bird= BitmapFactory.decodeResource(getResources(),R.drawable.bird);
+            birdWidth = bird.getWidth();
+            birdHeight = bird.getHeight();
+            tPWidth = topPipeScaled.getWidth();
+            bPWidth = bottomPipeScaled.getWidth();
+            tPHeight = topPipeScaled.getHeight();
+            bPHeight = bottomPipeScaled.getHeight();
             Display screenDisplay = getWindowManager().getDefaultDisplay();
             Point sizeOfScreen = new Point();
             screenDisplay.getSize(sizeOfScreen);
@@ -110,7 +137,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             System.out.println("Y: "+screenHeight);
 
             paintProperty= new Paint();
-
+            paintProperty.setColor(Color.BLACK);
 
         }
 
@@ -121,8 +148,37 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                     continue;
                 // https://developer.android.com/reference/android/graphics/Canvas
                 Canvas canvas= holder.lockCanvas();
+                if(pipeLeft>-300)
+                {
+                    pipeLeft-=5;
+                }
+                else
+                {
+                     pipeLeft = 1300;
+                     bPTop = (int)(Math.random()*1500)+500;
+
+                }
+                cBird = new Rect(birdLeft,birdTop,birdLeft+birdWidth,birdTop+birdHeight);
+                cBP = new Rect(pipeLeft,bPTop,pipeLeft+bPWidth,bPTop+bPHeight);
+                cTP = new Rect(pipeLeft,bPTop-1500,pipeLeft+tPWidth,bPTop-1500+tPHeight);
+
                 canvas.drawBitmap(backgroundScaled,0,0,null);
+
+                canvas.drawBitmap(bottomPipeScaled,pipeLeft,bPTop,null);
+                canvas.drawBitmap(topPipeScaled,pipeLeft,bPTop-1500,null);
+                canvas.drawRect(cTP,paintProperty);
+                canvas.drawRect(cBird,paintProperty);
                 canvas.drawBitmap( bird,birdLeft,birdTop,null);
+                canvas.drawRect(cBP,paintProperty);
+
+                if(cBird.intersect(cBP))
+                {
+                    Log.d("Hit","You Hit BottomPipe");
+                }
+                else if(cBird.intersect(cTP))
+                {
+                    Log.d("Hit","You Hit TopPipe");
+                }
                 holder.unlockCanvasAndPost(canvas);
                 birdTop-=(z*2);
             }
