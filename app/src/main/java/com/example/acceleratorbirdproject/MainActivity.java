@@ -1,5 +1,6 @@
 package com.example.acceleratorbirdproject;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -17,81 +18,64 @@ import android.view.Display;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import androidx.appcompat.app.AppCompatActivity;
-
+import java.util.concurrent.atomic.AtomicInteger;
 public class MainActivity extends AppCompatActivity implements SensorEventListener {
     //Code from this program has been used from Beginning Android Games
     //Review SurfaceView, Canvas, continue
-
     GameSurface gameSurface;
     Bitmap bird;
+    Bitmap deadBird;
     Bitmap topPipe;
     Bitmap bottomPipe;
+    Bitmap birdState;
     int birdLeft = 50;
     int birdTop = 700;
-    int pipeLeft=-100;
-    int bPTop=2000;
+    int pipeLeft=1300;
+    int bPTop=(int)(Math.random()*1000)+500;
     int birdWidth;
     int birdHeight;
     int tPWidth;
     int tPHeight;
     int bPWidth;
     int bPHeight;
-    boolean goingUp =false;
-    boolean goingDown = false;
+    int score = 0;
+    boolean alive = true;
+    static AtomicInteger time;
+    static final String scoreInfo = "Kushaal";
     int z = 0;
+    Intent endGame;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         gameSurface = new GameSurface(this);
         setContentView(gameSurface);
+        endGame = new Intent(MainActivity.this,MainActivityEnd.class);
         SensorManager sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        Sensor orientationSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        sensorManager.registerListener(this,orientationSensor,SensorManager.SENSOR_DELAY_FASTEST);
-
+        Sensor accelerationSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        sensorManager.registerListener(this,accelerationSensor,SensorManager.SENSOR_DELAY_FASTEST);
+        time = new AtomicInteger(60);
+        new Timer().start();
     }
-
     @Override
     protected void onPause(){
         super.onPause();
         gameSurface.pause();
     }
-
     @Override
     protected void onResume(){
         super.onResume();
         gameSurface.resume();
     }
-
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
-//        int x = (int)sensorEvent.values[0];
+        int x = (int)sensorEvent.values[2];
         z = (int)sensorEvent.values[0];
-//        int y = (int)sensorEvent.values[1];
-//        Log.d("Tag",x+" "+y+" "+z);
-        if(z>0)
-        {
-            goingUp=true;
-            goingDown=false;
-        }
-        else if(z<0)
-        {
-            goingDown=true;
-            goingUp=false;
-        }
-        else
-        {
-            goingUp=false;
-            goingDown=false;
-        }
+        int y = (int)sensorEvent.values[1];
+        Log.d("Tag",x+" "+y+" "+z);
     }
-
     @Override
     public void onAccuracyChanged(Sensor sensor, int i) {
-
     }
-
-
-
     //----------------------------GameSurface Below This Line--------------------------
     public class GameSurface extends SurfaceView implements Runnable {
         //https://developer.android.com/reference/android/view/SurfaceView
@@ -99,7 +83,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         Thread gameThread;
         SurfaceHolder holder;
         volatile boolean running = false;
-
         Bitmap background;
         Bitmap backgroundScaled;
         Bitmap topPipeScaled;
@@ -108,10 +91,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         Rect cBird;
         Rect cTP;
         Rect cBP;
-
         int screenWidth;
         int screenHeight;
-
         public GameSurface(Context context) {
             super(context);
             holder=getHolder();
@@ -122,6 +103,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             topPipeScaled = Bitmap.createScaledBitmap(topPipe,200,1200,false);
             bottomPipeScaled = Bitmap.createScaledBitmap(bottomPipe,200,1200,false);
             bird= BitmapFactory.decodeResource(getResources(),R.drawable.bird);
+            deadBird= BitmapFactory.decodeResource(getResources(),R.drawable.deadbird);
             birdWidth = bird.getWidth();
             birdHeight = bird.getHeight();
             tPWidth = topPipeScaled.getWidth();
@@ -135,61 +117,58 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             screenHeight=sizeOfScreen.y;
             System.out.println("X: "+screenWidth);
             System.out.println("Y: "+screenHeight);
-
             paintProperty= new Paint();
             paintProperty.setColor(Color.BLACK);
-
         }
-
         @Override
         public void run() {
-            while (running == true){
+            while (running == true&&time.intValue()>=0){
                 if (holder.getSurface().isValid() == false)
                     continue;
                 // https://developer.android.com/reference/android/graphics/Canvas
                 Canvas canvas= holder.lockCanvas();
-                if(pipeLeft>-300)
+                cBird = new Rect(birdLeft+50,birdTop+80,birdLeft+birdWidth-53,birdTop+birdHeight-80);
+                cBP = new Rect(pipeLeft,bPTop,pipeLeft+bPWidth,bPTop+bPHeight);
+                cTP = new Rect(pipeLeft,bPTop-1500,pipeLeft+tPWidth,bPTop-1500+tPHeight);
+                if(!cBird.intersect(cBP)&&!cBird.intersect(cTP)&&alive)
                 {
-                    pipeLeft-=5;
+                    birdState = bird;
+                    if(pipeLeft>-300)
+                        pipeLeft-=10;
+                    else
+                    {
+                        pipeLeft = 1300;
+                        bPTop = (int)(Math.random()*1000)+500;
+                        score++;
+                        Log.d("Score",""+score);
+                    }
+                    birdTop-=(z*2);
                 }
                 else
                 {
-                     pipeLeft = 1300;
-                     bPTop = (int)(Math.random()*1500)+500;
-
+                    birdState = deadBird;
+                    alive = false;
+                    Log.d("Fall",""+birdTop);
+                    if(birdTop<=1615)
+                        birdTop+=15;
+                    else
+                    {
+                        endGame.putExtra(scoreInfo,Integer.toString(score));
+                        startActivity(endGame);
+                    }
                 }
-                cBird = new Rect(birdLeft,birdTop,birdLeft+birdWidth,birdTop+birdHeight);
-                cBP = new Rect(pipeLeft,bPTop,pipeLeft+bPWidth,bPTop+bPHeight);
-                cTP = new Rect(pipeLeft,bPTop-1500,pipeLeft+tPWidth,bPTop-1500+tPHeight);
-
                 canvas.drawBitmap(backgroundScaled,0,0,null);
-
                 canvas.drawBitmap(bottomPipeScaled,pipeLeft,bPTop,null);
                 canvas.drawBitmap(topPipeScaled,pipeLeft,bPTop-1500,null);
-                canvas.drawRect(cTP,paintProperty);
-                canvas.drawRect(cBird,paintProperty);
-                canvas.drawBitmap( bird,birdLeft,birdTop,null);
-                canvas.drawRect(cBP,paintProperty);
-
-                if(cBird.intersect(cBP))
-                {
-                    Log.d("Hit","You Hit BottomPipe");
-                }
-                else if(cBird.intersect(cTP))
-                {
-                    Log.d("Hit","You Hit TopPipe");
-                }
+                canvas.drawBitmap(birdState,birdLeft,birdTop,null);
                 holder.unlockCanvasAndPost(canvas);
-                birdTop-=(z*2);
             }
         }
-
         public void resume(){
             running=true;
             gameThread=new Thread(this);
             gameThread.start();
         }
-
         public void pause() {
             running = false;
             while (true) {
@@ -199,7 +178,24 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 }
             }
         }
-
-
     }//GameSurface
+    public class Timer extends Thread{
+        public void run()
+        {
+            while(time.intValue()>=0)
+            {
+                if(time.intValue()==0)
+                {
+                    endGame.putExtra(scoreInfo,Integer.toString(score));
+                    startActivity(endGame);
+                }
+                time.getAndDecrement();
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
 }//Activity}
