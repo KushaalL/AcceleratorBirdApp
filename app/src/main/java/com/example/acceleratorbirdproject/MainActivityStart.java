@@ -3,7 +3,10 @@ package com.example.acceleratorbirdproject;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.TypedValue;
@@ -25,6 +28,7 @@ public class MainActivityStart extends AppCompatActivity {
     TextView timed;
     TextView endless;
     String gamemode = "";
+    MediaPlayer mP;
     static final String startString = "YoYoYo";
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,11 +65,14 @@ public class MainActivityStart extends AppCompatActivity {
                     startActivity(startGame);
                 }
                 else
-                {
                     Toast.makeText(MainActivityStart.this,"Select Gamemode",Toast.LENGTH_SHORT).show();
-                }
             }
         });
-
+        AudioManager manager = (AudioManager)this.getSystemService(Context.AUDIO_SERVICE);
+        mP = MediaPlayer.create(this,R.raw.theme);
+        mP.setLooping(true);
+        if(!manager.isMusicActive())
+            if(!mP.isPlaying())
+                mP.start();
     }
 }

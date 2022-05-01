@@ -8,11 +8,13 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Display;
@@ -55,14 +57,12 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     static final String scoreInfo = "Kushaal";
     String gamemode;
     int z = 0;
-    Intent endGame;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         gameSurface = new GameSurface(this);
         setContentView(gameSurface);
         gamemode = getIntent().getStringExtra(MainActivityStart.startString);
-        endGame = new Intent(MainActivity.this,MainActivityEnd.class);
         SensorManager sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         Sensor accelerationSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         sensorManager.registerListener(this,accelerationSensor,SensorManager.SENSOR_DELAY_FASTEST);
@@ -102,14 +102,20 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         Bitmap topPipeScaled;
         Bitmap bottomPipeScaled;
         Paint paintProperty;
+        Paint style;
         Rect cBird;
         Rect cTP;
         Rect cBP;
         int screenWidth;
         int screenHeight;
+
         public GameSurface(Context context) {
             super(context);
             holder=getHolder();
+            //Trying to add style for text
+//            style.setARGB(100,255,183,0);
+//            Typeface plain = Typeface.createFromFile(String.valueOf(R.font.flappybirdfont));
+//            style.setTypeface(plain);
             background=BitmapFactory.decodeResource(getResources(),R.drawable.background);
             topPipe = BitmapFactory.decodeResource(getResources(),R.drawable.toppipe);
             bottomPipe = BitmapFactory.decodeResource(getResources(),R.drawable.bottompipe);
@@ -148,6 +154,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 else
                 {
                     //add score only
+//                    canvas.drawText("Hey",0,0,style);
                 }
                 cBird = new Rect(birdLeft+50,birdTop+80,birdLeft+birdWidth-53,birdTop+birdHeight-80);
                 cBP = new Rect(pipeLeft,bPTop,pipeLeft+bPWidth,bPTop+bPHeight);
@@ -173,8 +180,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                     Log.d("Fall",""+birdTop);
                     if(birdTop>1630)
                     {
-                        endGame.putExtra(scoreInfo,Integer.toString(score));
-                        startActivity(endGame);
+                        Log.d("death","died");
+                        nextPart();
                     }
                     birdTop+=15;
 
@@ -207,10 +214,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             while(time.intValue()>=0)
             {
                 if(time.intValue()==0)
-                {
-                    endGame.putExtra(scoreInfo,Integer.toString(score));
-                    startActivity(endGame);
-                }
+                    nextPart();
                 time.getAndDecrement();
                 try {
                     Thread.sleep(1000);
@@ -219,5 +223,12 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 }
             }
         }
+    }
+    public void nextPart()
+    {
+        Log.d("death","hey");
+        Intent endGame = new Intent(MainActivity.this,MainActivityEnd.class);
+        endGame.putExtra("scoreInfo",Integer.toString(score));
+        startActivity(endGame);
     }
 }//Activity}
