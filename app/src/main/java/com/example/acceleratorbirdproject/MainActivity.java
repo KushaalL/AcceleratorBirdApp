@@ -56,6 +56,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     static AtomicInteger time;
     static final String scoreInfo = "Kushaal";
     String gamemode;
+    MediaPlayer scorePlayer;
     int z = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +70,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         time = new AtomicInteger(60);
         if(gamemode.equalsIgnoreCase("60"))
             new Timer().start();
+        scorePlayer = MediaPlayer.create(this,R.raw.scorenoise);
     }
     @Override
     protected void onPause(){
@@ -169,6 +171,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                         pipeLeft = 1300;
                         bPTop = (int)(Math.random()*1000)+500;
                         score++;
+                        scorePlayer.start();
                         Log.d("Score",""+score);
                     }
                     birdTop-=(z*2);
