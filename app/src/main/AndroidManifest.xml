@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.acceleratorbirdproject">
-
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -11,12 +10,6 @@
         android:theme="@style/Theme.AcceleratorBirdProject">
         <activity
             android:name=".MainActivityStart"
-            android:exported="false" />
-        <activity
-            android:name=".MainActivityEnd"
-            android:exported="false" />
-        <activity
-            android:name=".MainActivity"
             android:exported="true"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -25,6 +18,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".MainActivityEnd"
+            android:exported="true"
+            android:screenOrientation="portrait"/>
+
     </application>
 
 </manifest>

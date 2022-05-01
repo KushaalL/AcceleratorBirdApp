@@ -4,6 +4,78 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/background"
     tools:context=".MainActivityStart">
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:fontFamily="@font/flappybirdfont"
+        android:text="Slidy Bird"
+        android:textColor="#FFB700"
+        android:textSize="96sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/creator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:fontFamily="@font/flappybirdfont"
+        android:text="By: Kushaal Latupalli"
+        android:textColor="#FFB700"
+        android:textSize="65sp"
+        app:layout_constraintEnd_toEndOf="@+id/textView"
+        app:layout_constraintStart_toStartOf="@+id/textView"
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+
+
+    <ImageView
+        android:id="@+id/gifStart"
+        android:layout_width="228dp"
+        android:layout_height="169dp"
+        android:layout_marginTop="48dp"
+        app:layout_constraintEnd_toEndOf="@+id/creator"
+        app:layout_constraintStart_toStartOf="@+id/creator"
+        app:layout_constraintTop_toBottomOf="@+id/creator"
+        app:srcCompat="@drawable/flappybirdgif" />
+
+    <ImageView
+        android:id="@+id/imageViewStart"
+        android:layout_width="128dp"
+        android:layout_height="71dp"
+        android:background="@drawable/playbtn"
+        android:fontFamily="@font/flappybirdfont"
+        android:foreground="@drawable/playbtn"
+        android:textSize="34sp"
+        app:layout_constraintEnd_toEndOf="@+id/gifStart"
+        app:layout_constraintStart_toStartOf="@+id/gifStart"
+        app:layout_constraintTop_toBottomOf="@+id/gifStart" />
+
+    <RadioGroup
+        android:id="@+id/mode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="@+id/imageViewStart"
+        app:layout_constraintStart_toStartOf="@+id/imageViewStart"
+        app:layout_constraintTop_toBottomOf="@+id/imageViewStart">
+
+        <RadioButton
+            android:id="@+id/radioButton60Sec"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="60 Seconds" />
+
+        <RadioButton
+            android:id="@+id/radioButtonEndless"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Endless" />
+    </RadioGroup>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

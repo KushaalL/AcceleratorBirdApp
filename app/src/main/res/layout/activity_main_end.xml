@@ -4,15 +4,56 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/background"
     tools:context=".MainActivityEnd">
 
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="178dp"
-        android:layout_marginTop="174dp"
-        android:text="You Lost"
+        android:layout_marginTop="50dp"
+        android:fontFamily="@font/flappybirdfont"
+        android:text="Game Over"
+        android:textColor="#FFB700"
+        android:textSize="96sp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textViewScore"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:fontFamily="@font/flappybirdfont"
+        android:text="Score: "
+        android:textColor="#FFB700"
+        android:textSize="80sp"
+        app:layout_constraintEnd_toEndOf="@+id/textView"
+        app:layout_constraintStart_toStartOf="@+id/textView"
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+    <ImageView
+        android:id="@+id/restart"
+        android:layout_width="128dp"
+        android:layout_height="71dp"
+        android:layout_marginTop="40dp"
+        android:background="@drawable/playbtn"
+        android:fontFamily="@font/flappybirdfont"
+        android:foreground="@drawable/playbtn"
+        android:textSize="34sp"
+        app:layout_constraintEnd_toEndOf="@+id/gifEnd"
+        app:layout_constraintStart_toStartOf="@+id/gifEnd"
+        app:layout_constraintTop_toBottomOf="@+id/gifEnd" />
+
+    <ImageView
+        android:id="@+id/gifEnd"
+        android:layout_width="228dp"
+        android:layout_height="169dp"
+        android:layout_marginTop="48dp"
+        app:layout_constraintEnd_toEndOf="@+id/textViewScore"
+        app:layout_constraintStart_toStartOf="@+id/textViewScore"
+        app:layout_constraintTop_toBottomOf="@+id/textViewScore"
+        app:srcCompat="@drawable/flappybirdgif" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

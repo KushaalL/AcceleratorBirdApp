@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -17,7 +18,17 @@ import android.util.Log;
 import android.view.Display;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.gif.GifDrawable;
+import com.bumptech.glide.request.target.CustomTarget;
+import com.bumptech.glide.request.target.ImageViewTarget;
+import com.bumptech.glide.request.transition.Transition;
+
 import java.util.concurrent.atomic.AtomicInteger;
 public class MainActivity extends AppCompatActivity implements SensorEventListener {
     //Code from this program has been used from Beginning Android Games
@@ -42,6 +53,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     boolean alive = true;
     static AtomicInteger time;
     static final String scoreInfo = "Kushaal";
+    String gamemode;
     int z = 0;
     Intent endGame;
     @Override
@@ -49,12 +61,14 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         super.onCreate(savedInstanceState);
         gameSurface = new GameSurface(this);
         setContentView(gameSurface);
+        gamemode = getIntent().getStringExtra(MainActivityStart.startString);
         endGame = new Intent(MainActivity.this,MainActivityEnd.class);
         SensorManager sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         Sensor accelerationSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         sensorManager.registerListener(this,accelerationSensor,SensorManager.SENSOR_DELAY_FASTEST);
         time = new AtomicInteger(60);
-        new Timer().start();
+        if(gamemode.equalsIgnoreCase("60"))
+            new Timer().start();
     }
     @Override
     protected void onPause(){
@@ -127,6 +141,14 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                     continue;
                 // https://developer.android.com/reference/android/graphics/Canvas
                 Canvas canvas= holder.lockCanvas();
+                if(gamemode.equalsIgnoreCase("60"))
+                {
+                    //add score and time
+                }
+                else
+                {
+                    //add score only
+                }
                 cBird = new Rect(birdLeft+50,birdTop+80,birdLeft+birdWidth-53,birdTop+birdHeight-80);
                 cBP = new Rect(pipeLeft,bPTop,pipeLeft+bPWidth,bPTop+bPHeight);
                 cTP = new Rect(pipeLeft,bPTop-1500,pipeLeft+tPWidth,bPTop-1500+tPHeight);
@@ -149,13 +171,13 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                     birdState = deadBird;
                     alive = false;
                     Log.d("Fall",""+birdTop);
-                    if(birdTop<=1615)
-                        birdTop+=15;
-                    else
+                    if(birdTop>1630)
                     {
                         endGame.putExtra(scoreInfo,Integer.toString(score));
                         startActivity(endGame);
                     }
+                    birdTop+=15;
+
                 }
                 canvas.drawBitmap(backgroundScaled,0,0,null);
                 canvas.drawBitmap(bottomPipeScaled,pipeLeft,bPTop,null);
