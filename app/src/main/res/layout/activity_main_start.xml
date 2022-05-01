@@ -34,12 +34,11 @@
         app:layout_constraintTop_toBottomOf="@+id/textView" />
 
 
-
     <ImageView
         android:id="@+id/gifStart"
         android:layout_width="228dp"
         android:layout_height="169dp"
-        android:layout_marginTop="48dp"
+        android:layout_marginTop="24dp"
         app:layout_constraintEnd_toEndOf="@+id/creator"
         app:layout_constraintStart_toStartOf="@+id/creator"
         app:layout_constraintTop_toBottomOf="@+id/creator"
@@ -49,6 +48,7 @@
         android:id="@+id/imageViewStart"
         android:layout_width="128dp"
         android:layout_height="71dp"
+        android:layout_marginTop="24dp"
         android:background="@drawable/playbtn"
         android:fontFamily="@font/flappybirdfont"
         android:foreground="@drawable/playbtn"
@@ -57,25 +57,30 @@
         app:layout_constraintStart_toStartOf="@+id/gifStart"
         app:layout_constraintTop_toBottomOf="@+id/gifStart" />
 
-    <RadioGroup
-        android:id="@+id/mode"
+    <TextView
+        android:id="@+id/textView60Seconds"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:fontFamily="@font/flappybirdfont"
+        android:gravity="center"
+        android:text="Sixty Seconds"
+        android:textColor="#000000"
+        android:textSize="60sp"
         app:layout_constraintEnd_toEndOf="@+id/imageViewStart"
         app:layout_constraintStart_toStartOf="@+id/imageViewStart"
-        app:layout_constraintTop_toBottomOf="@+id/imageViewStart">
+        app:layout_constraintTop_toBottomOf="@+id/imageViewStart" />
 
-        <RadioButton
-            android:id="@+id/radioButton60Sec"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="60 Seconds" />
-
-        <RadioButton
-            android:id="@+id/radioButtonEndless"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Endless" />
-    </RadioGroup>
+    <TextView
+        android:id="@+id/textViewEndless"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/flappybirdfont"
+        android:gravity="center"
+        android:text="Endless"
+        android:textColor="#000000"
+        android:textSize="60sp"
+        app:layout_constraintEnd_toEndOf="@+id/textView60Seconds"
+        app:layout_constraintStart_toStartOf="@+id/textView60Seconds"
+        app:layout_constraintTop_toBottomOf="@+id/textView60Seconds" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

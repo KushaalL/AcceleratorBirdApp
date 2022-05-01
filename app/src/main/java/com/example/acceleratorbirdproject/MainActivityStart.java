@@ -22,9 +22,8 @@ public class MainActivityStart extends AppCompatActivity {
     ImageView birdgif;
     ImageView startGame;
     TextView creatorTitle;
-    RadioGroup mode;
-    RadioButton timed;
-    RadioButton endless;
+    TextView timed;
+    TextView endless;
     String gamemode = "";
     static final String startString = "YoYoYo";
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,16 +32,20 @@ public class MainActivityStart extends AppCompatActivity {
         startGame = findViewById(R.id.imageViewStart);
         creatorTitle = findViewById(R.id.creator);
         birdgif = findViewById(R.id.gifStart);
-        mode = findViewById(R.id.mode);
-        timed = findViewById(R.id.radioButton60Sec);
-        endless = findViewById(R.id.radioButtonEndless);
-        mode.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+        timed = findViewById(R.id.textView60Seconds);
+        endless = findViewById(R.id.textViewEndless);
+        timed.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCheckedChanged(RadioGroup radioGroup, int i) {
-                if(i==2131296741)
-                    gamemode = "60";
-                else
-                    gamemode = "endless";
+            public void onClick(View view) {
+                gamemode = "60";
+                Toast.makeText(MainActivityStart.this,"Sixty Second Gamemode Selected",Toast.LENGTH_SHORT).show();
+            }
+        });
+        endless.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                gamemode = "endless";
+                Toast.makeText(MainActivityStart.this,"Endless Gamemode Selected",Toast.LENGTH_SHORT).show();
             }
         });
         Glide.with(this).asGif()
@@ -51,7 +54,7 @@ public class MainActivityStart extends AppCompatActivity {
         startGame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(timed.isChecked()||timed.isChecked())
+                if(gamemode.equalsIgnoreCase("60")||gamemode.equalsIgnoreCase("endless"))
                 {
                     Intent startGame = new Intent(MainActivityStart.this,MainActivity.class);
                     startGame.putExtra(startString,gamemode);
