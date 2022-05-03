@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         int x = (int)sensorEvent.values[2];
         z = (int)sensorEvent.values[0];
         int y = (int)sensorEvent.values[1];
-        Log.d("Tag",x+" "+y+" "+z);
+        Log.d("Tag",x+" "+y+" "+z+"hey");
     }
     @Override
     public void onAccuracyChanged(Sensor sensor, int i) {
