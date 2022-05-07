@@ -22,10 +22,6 @@
             android:name=".MainActivity"
             android:exported="true"
             android:screenOrientation="portrait"/>
-        <activity
-            android:name=".MainActivityEnd"
-            android:exported="true"
-            android:screenOrientation="portrait"/>
 
     </application>
 

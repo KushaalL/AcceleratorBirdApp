@@ -1,23 +1,15 @@
 package com.example.acceleratorbirdproject;
 
 import androidx.appcompat.app.AppCompatActivity;
-
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.util.Log;
-import android.util.TypedValue;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.bumptech.glide.Glide;
 
 public class MainActivityStart extends AppCompatActivity {
@@ -73,6 +65,6 @@ public class MainActivityStart extends AppCompatActivity {
         mP.setLooping(true);
         if(!manager.isMusicActive())
             if(!mP.isPlaying())
-                mP.start();
+                mP.stop();
     }
 }
