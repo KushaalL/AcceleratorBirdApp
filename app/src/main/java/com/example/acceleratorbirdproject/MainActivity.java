@@ -14,7 +14,6 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Display;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -101,8 +100,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         int screenWidth;
         int screenHeight;
         Typeface customTypeface;
-        Bitmap button;
-        Bitmap buttonScaled;
         Boolean deathSound;
         MediaPlayer deathPlayer;
         public GameSurface(Context context) {
@@ -113,8 +110,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             style.setTextSize(300);
             customTypeface = ResourcesCompat.getFont(context, R.font.flappybirdfont);
             style.setTypeface(customTypeface);
-            button=BitmapFactory.decodeResource(getResources(),R.drawable.playbtn);
-            buttonScaled= Bitmap.createScaledBitmap(button,350,200,false);
             background=BitmapFactory.decodeResource(getResources(),R.drawable.background);
             topPipe = BitmapFactory.decodeResource(getResources(),R.drawable.toppipe);
             bottomPipe = BitmapFactory.decodeResource(getResources(),R.drawable.bottompipe);
@@ -174,7 +169,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                     if(deathSound)
                     {
                         deathSound = false;
-                        Log.d("death","hey");
                         deathPlayer.start();
                     }
                     birdState = deadBird;
