@@ -14,11 +14,11 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.view.Display;
-import android.view.SurfaceHolder;
-import android.view.SurfaceView;
+import android.view.*;
+import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.res.ResourcesCompat;
+import androidx.core.view.GestureDetectorCompat;
 import com.jakewharton.processphoenix.ProcessPhoenix;
 import java.util.concurrent.atomic.AtomicInteger;
 public class MainActivity extends AppCompatActivity implements SensorEventListener {
@@ -49,6 +49,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     String gamemode;
     MediaPlayer scorePlayer;
     int z = 0;
+    int pipeSpeed =5;
+    private GestureDetectorCompat gestureDetector;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,6 +65,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         time = new AtomicInteger(61);
         endTime = new AtomicInteger(5);
         scorePlayer = MediaPlayer.create(this,R.raw.scorenoise);
+        gestureDetector = new GestureDetectorCompat(this,new GestureListener());
     }
     @Override
     protected void onPause(){
@@ -154,7 +157,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 {
                     birdState = bird;
                     if(pipeLeft>-300)
-                        pipeLeft-=10;
+                        pipeLeft-=pipeSpeed;
                     else
                     {
                         pipeLeft = 1300;
@@ -162,8 +165,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                         score++;
                         scorePlayer.start();
                     }
-                    if(birdTop<0)
-                        birdTop=0;
                     birdTop-=(z*2);
                 }
                 else
@@ -241,7 +242,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                     endScreen= true;
                     alive = false;
                 }
-
                 time.getAndDecrement();
                 try {
                     Thread.sleep(1000);
@@ -266,5 +266,44 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 }
             }
         }
+    }
+    private class GestureListener implements GestureDetector.OnGestureListener {
+        @Override
+        public boolean onDown(MotionEvent motionEvent) {
+            return false;
+        }
+        @Override
+        public void onShowPress(MotionEvent motionEvent) {
+        }
+        @Override
+        public boolean onSingleTapUp(MotionEvent motionEvent) {
+            if(pipeSpeed==5)
+            {
+                pipeSpeed=10;
+                Toast.makeText(MainActivity.this,"Fast",Toast.LENGTH_SHORT).show();
+            }
+            else
+            {
+                pipeSpeed=5;
+                Toast.makeText(MainActivity.this,"Normal",Toast.LENGTH_SHORT).show();
+            }
+            return false;
+        }
+        @Override
+        public boolean onScroll(MotionEvent motionEvent, MotionEvent motionEvent1, float v, float v1) {
+            return false;
+        }
+        @Override
+        public void onLongPress(MotionEvent motionEvent) {
+        }
+        @Override
+        public boolean onFling(MotionEvent motionEvent, MotionEvent motionEvent1, float v, float v1) {
+            return false;
+        }
+    }
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        gestureDetector.onTouchEvent(event);
+        return super.onTouchEvent(event);
     }
 }//Activity
