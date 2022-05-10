@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     //Review SurfaceView, Canvas, continue
     GameSurface gameSurface;
     boolean timeStop;
-     boolean endScreen;
+    boolean endScreen;
     Bitmap bird;
     Bitmap deadBird;
     Bitmap topPipe;
@@ -162,6 +162,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                         score++;
                         scorePlayer.start();
                     }
+                    if(birdTop<0)
+                        birdTop=0;
                     birdTop-=(z*2);
                 }
                 else
