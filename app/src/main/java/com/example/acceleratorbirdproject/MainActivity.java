@@ -14,6 +14,7 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.*;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
@@ -63,7 +64,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         Sensor accelerationSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         sensorManager.registerListener(this,accelerationSensor,SensorManager.SENSOR_DELAY_FASTEST);
         time = new AtomicInteger(61);
-        endTime = new AtomicInteger(5);
+        endTime = new AtomicInteger(3);
         scorePlayer = MediaPlayer.create(this,R.raw.scorenoise);
         gestureDetector = new GestureDetectorCompat(this,new GestureListener());
     }
@@ -140,6 +141,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         }
         @Override
         public void run() {
+            Log.d("Height",""+screenHeight);
             if(gamemode.equalsIgnoreCase("60"))
                 new Timer().start();
             new endTimer().start();
@@ -165,7 +167,12 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                         score++;
                         scorePlayer.start();
                     }
-                    birdTop-=(z*2);
+                    if(birdTop<0)
+                        birdTop=0;
+                    else if(birdTop>1924)
+                        birdTop =1924;
+                    else
+                        birdTop-=(z*2);
                 }
                 else
                 {
@@ -176,15 +183,19 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                     }
                     birdState = deadBird;
                     alive = false;
-                    if(birdTop>1630)
+                    if(birdTop>screenHeight)
                         endScreen = true;
                     birdTop+=15;
                 }
                 canvas.drawBitmap(backgroundScaled,0,0,null);
                 canvas.drawBitmap(bottomPipeScaled,pipeLeft,bPTop,null);
                 canvas.drawBitmap(topPipeScaled,pipeLeft,bPTop-1500,null);
-                if(birdTop<1635)
+                if(birdTop<screenHeight)
+                {
+                    Log.d("Death","Death");
                     canvas.drawBitmap(birdState,birdLeft,birdTop,null);
+                }
+
                 if(gamemode.equalsIgnoreCase("60")&&!endScreen)
                 {
                     style.setTextSize(175);
