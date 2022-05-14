@@ -118,8 +118,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             topPipe = BitmapFactory.decodeResource(getResources(),R.drawable.toppipe);
             bottomPipe = BitmapFactory.decodeResource(getResources(),R.drawable.bottompipe);
             backgroundScaled = Bitmap.createScaledBitmap(background,1080,2150,false);
-            topPipeScaled = Bitmap.createScaledBitmap(topPipe,200,1200,false);
-            bottomPipeScaled = Bitmap.createScaledBitmap(bottomPipe,200,1200,false);
+            topPipeScaled = Bitmap.createScaledBitmap(topPipe,200,1800,false);
+            bottomPipeScaled = Bitmap.createScaledBitmap(bottomPipe,200,1800,false);
             bird= BitmapFactory.decodeResource(getResources(),R.drawable.bird);
             deadBird= BitmapFactory.decodeResource(getResources(),R.drawable.deadbird);
             birdWidth = bird.getWidth();
@@ -144,7 +144,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             Log.d("Height",""+screenHeight);
             if(gamemode.equalsIgnoreCase("60"))
                 new Timer().start();
-            new endTimer().start();
+//            new endTimer().start();
             while (running == true)
             {
                 if (holder.getSurface().isValid() == false)
@@ -154,7 +154,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
                 cBird = new Rect(birdLeft+50,birdTop+80,birdLeft+birdWidth-53,birdTop+birdHeight-80);
                 cBP = new Rect(pipeLeft,bPTop,pipeLeft+bPWidth,bPTop+bPHeight);
-                cTP = new Rect(pipeLeft,bPTop-1500,pipeLeft+tPWidth,bPTop-1500+tPHeight);
+                cTP = new Rect(pipeLeft,bPTop-2250,pipeLeft+tPWidth,bPTop-2250+tPHeight);
                 if((!cBird.intersect(cBP))&&(!cBird.intersect(cTP))&&alive)
                 {
                     birdState = bird;
@@ -162,17 +162,15 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                         pipeLeft-=pipeSpeed;
                     else
                     {
-                        pipeLeft = 1300;
-                        bPTop = (int)(Math.random()*1000)+500;
+                        pipeLeft = screenWidth+bottomPipeScaled.getWidth();
+                        bPTop = (int)(Math.random()*((screenHeight-250)-500))+500;
                         score++;
                         scorePlayer.start();
                     }
-                    if(birdTop<0)
-                        birdTop=0;
-                    else if(birdTop>1924)
-                        birdTop =1924;
-                    else
-                        birdTop-=(z*2);
+                    int change = -(z*2);
+                    if (birdTop + change > 0 && birdTop + change < screenHeight - bird.getHeight()) {
+                        birdTop += change;
+                    }
                 }
                 else
                 {
@@ -189,7 +187,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 }
                 canvas.drawBitmap(backgroundScaled,0,0,null);
                 canvas.drawBitmap(bottomPipeScaled,pipeLeft,bPTop,null);
-                canvas.drawBitmap(topPipeScaled,pipeLeft,bPTop-1500,null);
+                canvas.drawBitmap(topPipeScaled,pipeLeft,bPTop-2250,null);
                 if(birdTop<screenHeight)
                 {
                     Log.d("Death","Death");
@@ -199,12 +197,12 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 if(gamemode.equalsIgnoreCase("60")&&!endScreen)
                 {
                     style.setTextSize(175);
-                    canvas.drawText("Time: "+time.intValue()+" Score: "+score,75,150,style);
+                    canvas.drawText("Time: "+time.intValue()+" Score: "+score,25,150,style);
                 }
                 else if(gamemode.equalsIgnoreCase("endless")&&!endScreen)
                 {
                     style.setTextSize(200);
-                    canvas.drawText("Score: "+score,275,150,style);
+                    canvas.drawText("Score: "+score,25,150,style);
                 }
                 else if(endScreen)
                 {
