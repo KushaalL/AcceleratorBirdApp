@@ -1,2 +1,9 @@
-# AcceleratorBirdApp
-Like flappy bird, but instead of tapping the screen to move the bird, you tilt the screen to move it.
+# Tilted Wings
+Tilted Wings is an Android mobile game, Flappy Bird Clone, where players navigate the bird by tilting their device. 
+
+
+
+
+
+
+
